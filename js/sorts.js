@@ -1,583 +1,553 @@
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function swapAsync(idx1, idx2, time = 0) {
+  await sleep(time);
+  [arr[idx1], arr[idx2]] = [arr[idx2], arr[idx1]];
+}
+
+function swapSync(idx1, idx2) {
+  [arr[idx1], arr[idx2]] = [arr[idx2], arr[idx1]];
+}
+
+const colors = [
+  // from left to right
+  { r: 102, g: 0, b: 51 },
+  { r: 204, g: 0, b: 153 },
+  { r: 0, g: 0, b: 255 },
+  { r: 0, g: 255, b: 0 },
+  { r: 255, g: 255, b: 0 },
+  { r: 255, g: 71, b: 26 },
+  { r: 255, g: 0, b: 0 }
+];
+
 class Element {
-    constructor(value, idx) {
-        this.value = value;
-        this.r = this.g = this.b = 0;
+  constructor(value, idx) {
+    this.value = value;
+    this.r = this.g = this.b = 0;
 
-        let colors = [
-            // from left to right
-            { r: 102, g: 0, b: 51 },
-            { r: 204, g: 0, b: 153 },
-            { r: 0, g: 0, b: 255 },
-            { r: 0, g: 255, b: 0 },
-            { r: 255, g: 255, b: 0 },
-            { r: 255, g: 71, b: 26 },
-            { r: 255, g: 0, b: 0 },
-        ];
+    let group_length = width / (colors.length - 1),
+      group_idx;
 
-        let group_length = width / (colors.length - 1),
-            group_idx;
+    for (let i = colors.length - 2; i >= 0; i--) {
+      group_idx = group_length * i;
+      if (idx < group_idx) continue;
 
-        for (let i = colors.length - 2; i >= 0; i--) {
-            group_idx = group_length * i;
-            if (idx < group_idx) continue;
+      this.r = map(
+        idx,
+        group_idx,
+        group_idx + group_length,
+        colors[i].r,
+        colors[i + 1].r
+      );
+      this.g = map(
+        idx,
+        group_idx,
+        group_idx + group_length,
+        colors[i].g,
+        colors[i + 1].g
+      );
+      this.b = map(
+        idx,
+        group_idx,
+        group_idx + group_length,
+        colors[i].b,
+        colors[i + 1].b
+      );
+      break;
+    }
+  }
+}
 
-            this.r = map(idx, group_idx, group_idx + group_length, colors[i].r, colors[i + 1].r);
-            this.g = map(idx, group_idx, group_idx + group_length, colors[i].g, colors[i + 1].g);
-            this.b = map(idx, group_idx, group_idx + group_length, colors[i].b, colors[i + 1].b);
-            break;
+async function bubble() {
+  const num_it = 10,
+    time = 1;
+
+  let changed = true;
+
+  do {
+    for (let it = 0; it < num_it && changed; it++) {
+      changed = false;
+
+      for (let i = 1; i < arr.length; i++)
+        if (arr[i - 1].value > arr[i].value) {
+          swapSync(i - 1, i);
+          changed = true;
         }
     }
+    await sleep(time);
+  } while (changed);
 }
 
-function get_num_iterations() {
-    let val = parseInt(document.getElementById("skip").value);
+async function cocktail() {
+  const num_it = 10,
+    time = 1;
 
-    if (isNaN(val)) document.getElementById("skip").value = val = 1;
+  let swapped = true,
+    start = 0,
+    end = arr.length - 1;
 
-    return val;
-}
+  while (swapped) {
+    for (let it = 0; it < num_it && swapped; it++) {
+      swapped = false;
 
-function get_time() {
-    let time = parseInt(document.getElementById("time").value);
-
-    if (isNaN(time)) document.getElementById("time").value = time = 10;
-
-    return time;
-}
-
-function get_concurrency() {
-    return document.getElementById("concurrent").checked;
-}
-
-function get_data_slow_algs() {
-    return [get_time(), get_num_iterations()];
-}
-
-function get_data_fast_algs() {
-    return get_time();
-}
-
-function get_data_divide_et_impera() {
-    return [get_time(), get_concurrency()];
-}
-
-async function bubble_sort() {
-    let changed, i, it, num_it, time;
-    changed = true;
-    [time, num_it] = get_data_slow_algs();
-
-    do {
-        for (it = 0; it < num_it && changed; it++) {
-            changed = false;
-
-            for (i = 1; i < arr.length; i++)
-                if (arr[i - 1].value > arr[i].value) {
-                    swap_sync(i - 1, i);
-                    changed = true;
-                }
+      for (let i = start; i < end; ++i) {
+        if (arr[i].value > arr[i + 1].value) {
+          swapSync(i, i + 1);
+          swapped = true;
         }
-        await sleep(time);
-    } while (changed);
-}
+      }
 
-async function cocktail_sort() {
-    let swapped = true,
-        start = 0,
-        end = arr.length - 1,
-        i,
-        it,
-        num_it,
-        time;
-    [time, num_it] = get_data_slow_algs();
+      if (!swapped) break;
 
-    while (swapped) {
-        for (it = 0; it < num_it && swapped; it++) {
-            swapped = false;
+      swapped = false;
 
-            for (i = start; i < end; ++i) {
-                if (arr[i].value > arr[i + 1].value) {
-                    swap_sync(i, i + 1);
-                    swapped = true;
-                }
-            }
+      --end;
 
-            if (!swapped) break;
-
-            swapped = false;
-
-            --end;
-
-            for (i = end - 1; i >= start; --i) {
-                if (arr[i].value > arr[i + 1].value) {
-                    swap_sync(i, i + 1);
-                    swapped = true;
-                }
-            }
-
-            ++start;
+      for (let i = end - 1; i >= start; --i) {
+        if (arr[i].value > arr[i + 1].value) {
+          swapSync(i, i + 1);
+          swapped = true;
         }
-        await sleep(time);
+      }
+
+      ++start;
     }
+    await sleep(time);
+  }
 }
 
-async function insertion_sort() {
-    let i, j, key, it, num_it, time;
+async function insertion() {
+  const num_it = 10,
+    time = 1;
+  let it = 0;
+
+  for (let i = 1; i < arr.length; i++) {
+    let key = arr[i],
+      j = i - 1;
+
+    while (j >= 0 && arr[j].value > key.value) {
+      swapSync(j, j + 1);
+      j--;
+
+      it++;
+      if (it < num_it) continue;
+      it = 0;
+      await sleep(time);
+    }
+  }
+}
+
+async function binaryInsertion() {
+  const binarySearch = (item, low, high) => {
+    if (high <= low) return item > arr[low].value ? low + 1 : low;
+
+    let mid = (low + high) >> 1;
+
+    if (item == arr[mid].value) return mid + 1;
+
+    if (item > arr[mid].value) return binarySearch(item, mid + 1, high);
+    return binarySearch(item, low, mid - 1);
+  };
+
+  const num_it = 10,
+    time = 1;
+
+  let it = 0;
+
+  for (let i = 1; i < arr.length; ++i) {
+    let j = i - 1,
+      loc = binarySearch(arr[i].value, 0, j);
+
+    while (j >= loc) {
+      swapSync(j, j + 1);
+      j--;
+
+      it++;
+
+      if (it < num_it) continue;
+
+      it = 0;
+      await sleep(time);
+    }
+  }
+}
+
+async function gnome() {
+  const num_it = 10,
+    time = 1;
+
+  let index = 1,
     it = 0;
-    [time, num_it] = get_data_slow_algs();
 
-    for (i = 1; i < arr.length; i++) {
-        key = arr[i];
-        j = i - 1;
+  while (index < arr.length) {
+    if (index == 0) index++;
+    if (arr[index].value >= arr[index - 1].value) index++;
+    else swapSync(index, --index);
 
-        while (j >= 0 && arr[j].value > key.value) {
-            swap_sync(j, j + 1);
-            j--;
+    it++;
 
-            it++;
-            if (it < num_it) continue;
-            it = 0;
-            await sleep(time);
-        }
-    }
-}
+    if (it < num_it) continue;
 
-async function binary_insertion_sort() {
-    const binarySearch = (item, low, high) => {
-        if (high <= low) return item > arr[low].value ? low + 1 : low;
-
-        let mid = (low + high) >> 1;
-
-        if (item == arr[mid].value) return mid + 1;
-
-        if (item > arr[mid].value) return binarySearch(item, mid + 1, high);
-        return binarySearch(item, low, mid - 1);
-    };
-
-    let loc, i, j, it, num_it, time;
     it = 0;
-    [time, num_it] = get_data_slow_algs();
-
-    for (i = 1; i < arr.length; ++i) {
-        j = i - 1;
-
-        loc = binarySearch(arr[i].value, 0, j);
-
-        while (j >= loc) {
-            swap_sync(j, j + 1);
-            j--;
-
-            it++;
-            if (it < num_it) continue;
-            it = 0;
-            await sleep(time);
-        }
-    }
+    await sleep(time);
+  }
 }
 
-async function gnome_sort() {
-    let index = 1,
-        it = 0,
-        num_it,
-        time;
-    [time, num_it] = get_data_slow_algs();
+async function optimizedGnome() {
+  const num_it = 10,
+    time = 1;
 
-    while (index < arr.length) {
-        if (index == 0) index++;
-        if (arr[index].value >= arr[index - 1].value) index++;
-        else swap_sync(index, --index);
+  let it = 0;
+
+  const gnomeSort = async max => {
+    let index = max;
+
+    while (index > 0 && arr[index - 1].value > arr[index].value) {
+      swapSync(index, --index);
+
+      it++;
+
+      if (it < num_it) continue;
+
+      it = 0;
+      await sleep(time);
+    }
+  };
+
+  for (let i = 1; i < arr.length; i++) await gnomeSort(i);
+}
+
+async function oddEven() {
+  const num_it = 10,
+    time = 1;
+
+  let isSorted = false,
+    it = 0;
+
+  while (!isSorted) {
+    isSorted = true;
+
+    for (let i = 1; i <= arr.length - 2; i += 2) {
+      if (arr[i].value <= arr[i + 1].value) continue;
+
+      swapSync(i, i + 1);
+      isSorted = false;
+
+      it++;
+      if (it < num_it) continue;
+      it = 0;
+      await sleep(time);
+    }
+
+    for (let i = 0; i <= arr.length - 2; i += 2) {
+      if (arr[i].value <= arr[i + 1].value) continue;
+
+      swapSync(i, i + 1);
+      isSorted = false;
+
+      it++;
+
+      if (it < num_it) continue;
+
+      it = 0;
+      await sleep(time);
+    }
+  }
+}
+
+async function comb() {
+  const getNextGap = gap => {
+    gap = Math.floor((gap * 10) / 13);
+    return gap < 1 ? 1 : gap;
+  };
+
+  const num_it = 10,
+    time = 1;
+
+  let gap = arr.length,
+    swapped = true,
+    it = 0;
+
+  while (gap != 1 || swapped) {
+    gap = getNextGap(gap);
+    swapped = false;
+
+    for (let i = 0; i < arr.length - gap; i++) {
+      if (arr[i].value > arr[i + gap].value) {
+        swapSync(i, i + gap);
+        swapped = true;
 
         it++;
         if (it < num_it) continue;
         it = 0;
         await sleep(time);
+      }
     }
+  }
 }
 
-async function optimized_gnome_sort() {
-    let i, it, num_it, time;
-    [time, num_it] = get_data_slow_algs();
+async function shell() {
+  const num_it = 10,
+    time = 1;
 
-    const gnomeSort = async (max) => {
-        let index = max;
+  let it = 0;
 
-        while (index > 0 && arr[index - 1].value > arr[index].value) {
-            swap_sync(index, --index);
+  for (
+    let gap = Math.floor(arr.length / 1);
+    gap > 0;
+    gap = Math.floor(gap / 2)
+  ) {
+    for (let i = gap; i < arr.length; i++) {
+      let temp = arr[i];
 
-            it++;
-            if (it < num_it) continue;
-            it = 0;
-            await sleep(time);
-        }
-    };
+      for (let j = i; j >= gap && arr[j - gap].value > temp.value; j -= gap) {
+        swapSync(j, j - gap);
 
-    for (i = 1; i < arr.length; i++) await gnomeSort(i);
-}
+        it++;
 
-async function odd_even_sort() {
-    let isSorted, i, j, it, num_it, time;
-    isSorted = false;
-    it = 0;
-    [time, num_it] = get_data_slow_algs();
+        if (it < num_it) continue;
+        it = 0;
 
-    while (!isSorted) {
-        isSorted = true;
-
-        for (i = 1; i <= arr.length - 2; i = i + 2) {
-            if (arr[i].value <= arr[i + 1].value) continue;
-
-            swap_sync(i, i + 1);
-            isSorted = false;
-
-            it++;
-            if (it < num_it) continue;
-            it = 0;
-            await sleep(time);
-        }
-
-        for (j = 0; j <= arr.length - 2; j = j + 2) {
-            if (arr[j].value <= arr[j + 1].value) continue;
-
-            swap_sync(j, j + 1);
-            isSorted = false;
-
-            it++;
-            if (it < num_it) continue;
-            it = 0;
-            await sleep(time);
-        }
+        await sleep(time);
+      }
     }
+  }
 }
 
-async function comb_sort() {
-    const getNextGap = (gap) => {
-        gap = Math.floor((gap * 10) / 13);
-        return gap < 1 ? 1 : gap;
-    };
+async function selection() {
+  const time = 1;
 
-    let gap = arr.length,
-        swapped = true,
-        i,
-        it = 0,
-        num_it,
-        time;
+  for (let i = 0; i < arr.length - 1; i++) {
+    let min_idx = i;
 
-    [time, num_it] = get_data_slow_algs();
+    for (let j = i + 1; j < arr.length; j++)
+      if (arr[j].value < arr[min_idx].value) min_idx = j;
 
-    while (gap != 1 || swapped) {
-        gap = getNextGap(gap);
-        swapped = false;
+    await swapAsync(min_idx, i, time);
+  }
+}
 
-        for (i = 0; i < arr.length - gap; i++) {
-            if (arr[i].value > arr[i + gap].value) {
-                swap_sync(i, i + gap);
-                swapped = true;
+async function doubleSelection() {
+  const time = 1;
 
-                it++;
-                if (it < num_it) continue;
-                it = 0;
-                await sleep(time);
-            }
-        }
+  let start = 0,
+    end = arr.length - 1;
+
+  while (start <= end) {
+    let smallIndex = start,
+      largeIndex = end;
+
+    for (let i = start + 1; i <= end; i++)
+      if (arr[i].value < arr[smallIndex].value) smallIndex = i;
+
+    if (smallIndex != start) await swapAsync(smallIndex, start, time);
+
+    start++;
+
+    for (let i = end - 1; i >= start; i--)
+      if (arr[i].value > arr[largeIndex].value) largeIndex = i;
+
+    if (largeIndex != end) await swapAsync(largeIndex, end, time);
+
+    end--;
+  }
+}
+
+async function heap() {
+  const time = 1;
+
+  const heapify = async (size, idx) => {
+    let largest = idx,
+      left = 2 * idx + 1,
+      right = 2 * idx + 2;
+
+    if (left < size && arr[left].value > arr[largest].value) largest = left;
+
+    if (right < size && arr[right].value > arr[largest].value) largest = right;
+
+    if (largest === idx) return;
+
+    await swapAsync(idx, largest, time);
+    await heapify(size, largest);
+  };
+
+  for (let i = Math.floor(arr.length / 2) - 1; i >= 0; i--)
+    await heapify(arr.length, i);
+
+  for (let i = arr.length - 1; i > 0; i--) {
+    await swapAsync(0, i, time);
+    await heapify(i, 0);
+  }
+}
+
+async function merge() {
+  const time = 1;
+
+  const mergeArr = async (left, mid, right) => {
+    let start2 = mid + 1,
+      value,
+      index;
+
+    if (arr[mid].value <= arr[start2].value) return;
+
+    while (left <= mid && start2 <= right) {
+      if (arr[left].value <= arr[start2].value) {
+        left++;
+        continue;
+      }
+
+      value = arr[start2];
+      index = start2;
+
+      while (index > left) arr[index] = arr[--index];
+
+      arr[left] = value;
+
+      left++;
+      mid++;
+      start2++;
+
+      await sleep(time);
     }
+  };
+
+  const sort = async (left, right) => {
+    if (left >= right) return;
+
+    let mid = Math.floor((right + left) / 2);
+
+    await sort(left, mid);
+    await sort(mid + 1, right);
+    await mergeArr(left, mid, right);
+  };
+
+  await sort(0, arr.length - 1);
 }
 
-async function shell_sort() {
-    let gap, i, j, temp, it, num_it, time;
-    [time, num_it] = get_data_slow_algs();
+async function quick() {
+  const time = 1;
 
-    for (gap = arr.length >> 1; gap > 0; gap >>= 1) {
-        for (i = gap; i < arr.length; i++) {
-            temp = arr[i];
+  const partition = async (low, high) => {
+    let pivot = arr[high].value,
+      i = low - 1;
 
-            for (j = i; j >= gap && arr[j - gap].value > temp.value; j -= gap) {
-                swap_sync(j, j - gap);
+    for (let j = low; j < high; j++) {
+      if (arr[j].value > pivot) continue;
 
-                it++;
-                if (it < num_it) continue;
-                it = 0;
-                await sleep(time);
-            }
-        }
+      i++;
+      await swapAsync(i, j, time);
     }
+
+    await swapAsync(i + 1, high, time);
+    return i + 1;
+  };
+
+  const sort = async (low, high) => {
+    if (low >= high) return;
+
+    let pivot = await partition(low, high);
+    await sort(low, pivot - 1);
+    await sort(pivot + 1, high);
+  };
+
+  await sort(0, arr.length - 1);
 }
 
-async function selection_sort() {
-    let i, j, min_idx, time;
-    time = get_data_fast_algs();
+async function intro() {
+  const time = 0;
 
-    for (i = 0; i < arr.length - 1; i++) {
-        min_idx = i;
+  const insertionSort = async (begin, end) => {
+    for (let i = begin + 1; i <= end; i++) {
+      let j = i - 1;
 
-        for (j = i + 1; j < arr.length; j++) if (arr[j].value < arr[min_idx].value) min_idx = j;
-
-        await swap_async(min_idx, i, time);
+      while (j >= begin && arr[j].value > arr[j + 1].value) {
+        await swapAsync(j, j + 1, time);
+        j--;
+      }
     }
-}
+  };
 
-async function double_selection_sort() {
-    let smallIndex,
-        largeIndex,
-        start = 0,
-        end = arr.length - 1,
-        i,
-        time = get_data_fast_algs();
+  const partition = async (low, high) => {
+    const pivot = arr[high].value;
 
-    while (start <= end) {
-        smallIndex = start;
-        largeIndex = end;
+    let i = low - 1;
 
-        for (i = start + 1; i <= end; i++) if (arr[i].value < arr[smallIndex].value) smallIndex = i;
+    for (let j = low; j <= high - 1; j++)
+      if (arr[j].value <= pivot) await swapAsync(++i, j, time);
 
-        if (smallIndex != start) await swap_async(smallIndex, start, time);
+    swapAsync(i + 1, high, time);
+    return i + 1;
+  };
 
-        start++;
+  const median = (a, b, c) => {
+    const max = Math.max(a, b, c),
+      min = Math.min(a, b, c);
 
-        for (i = end - 1; i >= start; i--) if (arr[i].value > arr[largeIndex].value) largeIndex = i;
+    return a + b + c - min - max;
+  };
 
-        if (largeIndex != end) await swap_async(largeIndex, end, time);
+  const heapify = async (idx, begin, size) => {
+    const l = 2 * idx + 1,
+      r = 2 * idx + 2;
 
-        end--;
+    let largest = idx;
+
+    if (l < size && arr[largest + begin].value < arr[l + begin].value)
+      largest = l;
+
+    if (r < size && arr[largest + begin].value < arr[r + begin].value)
+      largest = r;
+
+    if (largest === idx) return;
+
+    await swapAsync(idx + begin, largest + begin, time);
+    await heapify(largest, begin, size);
+  };
+
+  const sort = async (begin, end, depthLimit) => {
+    const size = end - begin + 1;
+
+    if (size < 16) return await insertionSort(begin, end);
+
+    if (depthLimit <= 0) {
+      for (let i = Math.floor(size / 2) - 1; i >= 0; i--)
+        await heapify(i, begin, size);
+
+      for (let i = end; i > begin; i--) {
+        await swapAsync(i, begin, time);
+        await heapify(0, begin, i - begin);
+      }
+
+      return;
     }
+
+    const mid = begin + Math.floor(size / 2);
+    let pivot = median(begin, mid, end);
+
+    await swapAsync(pivot, end, time);
+
+    pivot = await partition(begin, end);
+
+    depthLimit--;
+
+    await sort(begin, pivot - 1, depthLimit);
+    await sort(pivot + 1, end, depthLimit);
+  };
+
+  await sort(0, arr.length - 1, 2 * Math.floor(Math.log(arr.length)));
 }
 
-async function heap_sort() {
-    let time = get_data_fast_algs();
+function isHeap(begin, end) {
+  for (let i = begin; i <= end; i++) {
+    let l = 2 * i + 1,
+      r = 2 * i + 2;
 
-    const heapify = async (size_of_heap, node) => {
-        let largest = node,
-            l = 2 * node + 1,
-            r = 2 * node + 2;
+    if (l < arr.length && arr[i].value < arr[l].value) return [false, i];
 
-        if (l < size_of_heap && arr[l].value > arr[largest].value) largest = l;
+    if (r < arr.length && arr[i].value < arr[r].value) return [false, i];
+  }
 
-        if (r < size_of_heap && arr[r].value > arr[largest].value) largest = r;
-
-        if (largest == node) return;
-
-        await swap_async(node, largest, time);
-        await heapify(size_of_heap, largest);
-    };
-
-    const sort = async () => {
-        for (let i = (arr.length >> 1) - 1; i >= 0; i--) await heapify(arr.length, i);
-
-        for (let i = arr.length - 1; i >= 0; i--) {
-            await swap_async(0, i, time);
-            await heapify(i, 0);
-        }
-    };
-
-    await sort();
-}
-
-async function merge_sort() {
-    let time, concurrent;
-    [time, concurrent] = get_data_divide_et_impera();
-
-    const merge = async (start, mid, end) => {
-        let start2 = mid + 1,
-            value,
-            index;
-
-        if (arr[mid].value <= arr[start2].value) return;
-
-        while (start <= mid && start2 <= end) {
-            if (arr[start].value <= arr[start2].value) {
-                start++;
-                continue;
-            }
-
-            value = arr[start2];
-            index = start2;
-
-            while (index > start) arr[index] = arr[--index];
-
-            arr[start] = value;
-
-            start++;
-            mid++;
-            start2++;
-
-            await sleep(time);
-        }
-    };
-
-    const recursive_call = concurrent
-        ? async (l, m, r) => {
-              await Promise.all([sort(l, m), sort(m + 1, r)]);
-          }
-        : async (l, m, r) => {
-              await sort(l, m);
-              await sort(m + 1, r);
-          };
-
-    const sort = async (l, r) => {
-        if (l >= r) return;
-
-        let m = (r + l) >> 1;
-
-        await recursive_call(l, m, r);
-        await merge(l, m, r);
-    };
-
-    await sort(0, arr.length - 1);
-}
-
-async function quick_sort() {
-    let time, concurrent;
-    [time, concurrent] = get_data_divide_et_impera();
-
-    const partition = async (low, high) => {
-        let pivot = arr[high].value,
-            i = low - 1;
-
-        for (let j = low; j < high; j++) {
-            if (arr[j].value > pivot) continue;
-
-            i++;
-            await swap_async(i, j, time);
-        }
-
-        await swap_async(i + 1, high, time);
-        return i + 1;
-    };
-
-    const recursive_call = concurrent
-        ? async (low, pi, high) => {
-              await Promise.all([sort(low, pi - 1), sort(pi + 1, high)]);
-          }
-        : async (low, pi, high) => {
-              await sort(low, pi - 1);
-              await sort(pi + 1, high);
-          };
-
-    const sort = async (low, high) => {
-        if (low >= high) return;
-
-        let pi = await partition(low, high);
-        await recursive_call(low, pi, high);
-    };
-
-    await sort(0, arr.length - 1);
-}
-
-async function intro_sort() {
-    let time, concurrent;
-    [time, concurrent] = get_data_divide_et_impera();
-
-    const max_heap = async (i, heapN, begin) => {
-        let temp = arr[begin + i - 1].value,
-            child;
-
-        while (i <= heapN / 2) {
-            child = 2 * i;
-
-            if (child < heapN && arr[begin + child - 1].value < arr[begin + child].value) child++;
-
-            if (temp >= arr[begin + child - 1].value) break;
-
-            await swap_async(begin + i - 1, begin + child - 1, time);
-            i = child;
-        }
-    };
-
-    const heapify = async (begin, heapN) => {
-        for (let i = heapN >> 1; i >= 1; i--) max_heap(i, heapN, begin);
-    };
-
-    const heap_sort_ = async (begin, end) => {
-        let heapN = end - begin;
-
-        heapify(begin, heapN);
-
-        for (let i = heapN; i >= 1; i--) {
-            await swap_async(begin, begin + i, time);
-            await max_heap(1, i, begin);
-        }
-    };
-
-    const insertion_sort_ = async (left, right) => {
-        let key, i, j;
-        for (i = left; i <= right; i++) {
-            key = arr[i].value;
-            j = i;
-
-            while (j > left && arr[j - 1].value > key) {
-                await swap_async(j, j - 1, time);
-                j--;
-            }
-        }
-    };
-
-    const median = (a, b, c) => {
-        let max = Math.max(a, Math.max(b, c)),
-            min = Math.min(a, Math.min(b, c));
-
-        return a + b + c - max - min;
-    };
-
-    const pivot = (a, b, c) => {
-        let m = median(arr[a].value, arr[b].value, arr[c].value);
-
-        if (m == arr[a].val) return a;
-
-        if (m == arr[b].val) return b;
-
-        return c;
-    };
-
-    const partition = async (low, high) => {
-        let pivot = arr[high].value,
-            i = low - 1,
-            j;
-
-        for (j = low; j <= high - 1; j++) if (arr[j].value <= pivot) await swap_async(++i, j, time);
-
-        await swap_async(++i, high, time);
-        return i;
-    };
-
-    const recursive_call = concurrent
-        ? async (begin, p, end, depth_limit) => {
-              await Promise.all([sort(begin, p - 1, depth_limit), sort(p + 1, end, depth_limit)]);
-          }
-        : async (begin, p, end, depth_limit) => {
-              await sort(begin, p - 1, depth_limit);
-              await sort(p + 1, end, depth_limit);
-          };
-
-    const sort = async (begin, end, depth_limit) => {
-        if (end - begin < 16) {
-            await insertion_sort_(begin, end);
-            return;
-        }
-
-        if (depth_limit == 0) {
-            await heap_sort_(begin, end);
-            return;
-        }
-
-        depth_limit--;
-        let piv = pivot(begin, ((end + begin) >> 1) + 1, end);
-        await swap_async(piv, end);
-
-        let p = await partition(begin, end);
-
-        await recursive_call(begin, p, end, depth_limit);
-
-        let t;
-
-        // there are some cases when it doesn't sort properly
-        // and due to my lack of understanding, I've had to resort to this type of measure
-        for (piv = begin; piv < end; piv++)
-            for (p = piv + 1; p <= end; p++) {
-                if (arr[piv].value <= arr[p].value) continue;
-
-                t = arr[piv];
-                arr[piv] = arr[p];
-                arr[p] = t;
-            }
-    };
-
-    await sort(0, arr.length - 1, 2 * Math.floor(Math.log(arr.length)));
+  return true;
 }
