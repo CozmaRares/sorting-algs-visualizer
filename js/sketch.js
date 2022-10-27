@@ -1,12 +1,10 @@
 let arr = [];
 
 function setup() {
-  let canvas = createCanvas(
-    windowWidth,
-    windowHeight -
-      document.getElementById("p5js-container").getBoundingClientRect().y
-  );
-  canvas.parent("p5js-container");
+  const container = document.querySelector("#container");
+
+  let canvas = createCanvas(container.clientWidth, container.clientHeight);
+  canvas.parent("container");
 
   strokeWeight(1);
   noFill();

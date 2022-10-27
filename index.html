@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <link rel="stylesheet" type="text/css" href="css/style.css" />
-    <meta charset="utf-8" />
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sorting Algorithms</title>
+    <link rel="stylesheet" type="text/css" href="./styles.css" />
     <script
       defer
       type="text/javascript"
@@ -13,73 +16,19 @@
       type="text/javascript"
       src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.1/addons/p5.sound.min.js"
     ></script>
+
+    <script defer src="js/utils.js"></script>
+    <script defer src="js/sorts.js"></script>
+    <script defer src="js/sketch.js"></script>
   </head>
   <body>
-    <div class="nav">
-      <div class="dropdown">
-        <div id="text_">Sorting algorithms</div>
-        <!-- text() already taken by p5js -->
-        <ul id="sorting-algorithms">
-          <li onclick="set_sort(0)">Bubble</li>
-          <li onclick="set_sort(1)">Cocktail shaker</li>
-          <li onclick="set_sort(2)">Insertion</li>
-          <li onclick="set_sort(3)">Binary insertion</li>
-          <li onclick="set_sort(4)">Gnome</li>
-          <li onclick="set_sort(5)">Optimized gnome</li>
-          <li onclick="set_sort(6)">Odd/even</li>
-          <li onclick="set_sort(7)">Comb</li>
-          <li onclick="set_sort(8)">Shell</li>
-          <li onclick="set_sort(9)">Selection</li>
-          <li onclick="set_sort(10)">Double selection</li>
-          <li onclick="set_sort(11)">Heap</li>
-          <li onclick="set_sort(12)">Merge</li>
-          <li onclick="set_sort(13)">Quick</li>
-          <li onclick="set_sort(14)" title="C++ std::sort">Intro</li>
-        </ul>
-      </div>
-      <div class="dropdown" id="config">
-        Config
-        <ul class="config">
-          <li>
-            <label for="time" id="time-label">Time(ms)</label>
-            <input type="text" id="time" name="time" placeholder="10" />
-          </li>
-          <li class="hidden" id="slow-algs">
-            <label for="skip">Number of iterations per frame </label>
-            <input type="text" id="skip" name="skip" placeholder="1" />
-          </li>
-          <li class="hidden" id="divide-et-impera">
-            <label for="concurrent">Allow concurrency</label>
-            <input
-              type="checkbox"
-              id="concurrent"
-              name="concurrent"
-              style="cursor: pointer"
-            />
-          </li>
-        </ul>
-      </div>
-      <button
-        style="float: right"
-        class="nav-btn"
-        id="shuffle-btn"
-        onclick="shuff()"
-      >
-        Shuffle
-      </button>
-      <button
-        style="float: right"
-        class="nav-btn"
-        id="start-btn"
-        onclick="start_sort()"
-      >
-        Start
-      </button>
-    </div>
-    <div id="p5js-container"></div>
-
-    <script src="js/utils.js"></script>
-    <script src="js/sorts.js"></script>
-    <script src="js/sketch.js"></script>
+    <aside>
+      <button>Config</button>
+      <button>Start</button>
+    </aside>
+    <main>
+      <div id="container"></div>
+    </main>
+    <footer></footer>
   </body>
 </html>
