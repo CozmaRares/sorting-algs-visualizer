@@ -87,6 +87,30 @@ button:active {
   display: flex;
 }
 
+footer {
+  background-color: var(--col);
+  text-align: center;
+  position: absolute;
+  bottom: 1%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.5rem 1rem;
+  border-radius: 50rem;
+}
+
+footer a {
+  text-decoration: none;
+  color: var(--bg);
+}
+
+footer a i {
+  transition: transform 200ms ease-in-out;
+}
+
+footer a:hover i {
+  transform: rotate(360deg);
+}
+
 @media only screen and (min-width: 900px) {
   body {
     flex-direction: row;
