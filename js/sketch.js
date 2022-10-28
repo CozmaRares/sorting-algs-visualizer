@@ -1,5 +1,10 @@
 let arr = [];
 
+let canvasBackground =
+  getComputedStyle(document.body).getPropertyValue("--dark") === "true"
+    ? 0
+    : 255;
+
 function setup() {
   const container = document.querySelector("#container");
 
@@ -20,7 +25,7 @@ function setup() {
 }
 
 function draw() {
-  background(0);
+  background(canvasBackground);
 
   arr.forEach((el, idx) => {
     stroke(el.r, el.g, el.b);

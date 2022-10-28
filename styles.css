@@ -30,7 +30,7 @@ input {
 }
 
 .light {
-  --bg: #eee;
+  --bg: #eeeeee;
   --col: black;
 }
 
@@ -42,7 +42,10 @@ input {
 body {
   background-color: var(--bg);
   color: var(--col);
-  min-height: 100vh;
+  display: flex;
+  gap: 4rem;
+  margin-top: 3rem;
+  flex-direction: column-reverse;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -51,11 +54,49 @@ body {
   }
 }
 
+aside {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-direction: row;
+}
+
+button {
+  border: 1px solid var(--col);
+  padding: 0.75rem;
+  border-radius: 10px;
+  font-weight: 500;
+  transition-property: color, background-color;
+  transition-duration: 150ms;
+  transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+}
+
+button:hover,
+button:active {
+  color: var(--bg);
+  background-color: var(--col);
+}
+
 #container {
-  width: min(800px, 100vw - 2rem);
+  width: min(700px, 100vw - 2rem);
   max-height: 80vh;
   aspect-ratio: 1;
   box-shadow: 0 0 10px 5px var(--col);
   margin: 0 auto;
   display: flex;
+}
+
+@media only screen and (min-width: 900px) {
+  body {
+    flex-direction: row;
+    justify-content: center;
+    height: 100%;
+  }
+
+  aside {
+    justify-content: center;
+    flex-direction: column;
+    gap: 3rem;
+  }
 }
