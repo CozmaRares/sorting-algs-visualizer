@@ -3,7 +3,11 @@ let arr = [];
 function setup() {
   const container = document.querySelector("#container");
 
-  let canvas = createCanvas(container.clientWidth, container.clientHeight);
+  const styles = getComputedStyle(container);
+
+  const parse = str => parseInt(str.replace("px", ""));
+
+  let canvas = createCanvas(parse(styles.width), parse(styles.height));
   canvas.parent("container");
 
   strokeWeight(1);
@@ -18,8 +22,8 @@ function setup() {
 function draw() {
   background(0);
 
-  arr.forEach((element, index) => {
-    stroke(element.r, element.g, element.b);
-    line(index, height, index, height - element.value);
+  arr.forEach((el, idx) => {
+    stroke(el.r, el.g, el.b);
+    line(idx, height, idx, height - el.value);
   });
 }
