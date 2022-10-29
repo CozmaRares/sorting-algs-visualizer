@@ -188,7 +188,6 @@ button {
   overflow: auto;
   position: absolute;
   list-style: none;
-  color: white;
   margin-top: 1rem;
   background-color: var(--bg);
   pointer-events: none;
