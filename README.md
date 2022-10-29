@@ -18,7 +18,7 @@ ___Work in progress___
 ### Improvements to be made
 
 * [x] Proper implementation for intro sort
-* [ ] Change UI
+* [x] Change UI
 * [ ] Add more algorithms
 
 ### License

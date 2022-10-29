@@ -30,14 +30,24 @@
   <body>
     <aside>
       <button onclick="startSorting()">Start</button>
-      <button>Config</button>
+      <button onclick="openModal()">Config</button>
     </aside>
     <main>
+      <div
+        style="
+          text-align: center;
+          text-transform: capitalize;
+          margin-bottom: 2rem;
+        "
+      >
+        <div>Current algorithm:</div>
+        <span data-selected>Quick</span>
+      </div>
       <div id="container"></div>
     </main>
     <footer>
       <a
-        href="https://github.com/CozmaRares/odin-project-etch-a-sketch"
+        href="https://github.com/CozmaRares/sorting-algs-visualizer"
         target="_blank"
         rel="noopener noreferrer"
       >
@@ -47,26 +57,26 @@
     <div class="modal">
       <div class="modal-container">
         <div class="dropdown">
-          <div id="text">
-            <span>Quick</span>
+          <div onclick="toggleDropdown()">
+            <span data-selected>quick</span>
             <i class="fa-solid fa-caret-down"></i>
           </div>
-          <ul>
-            <li>Bubble</li>
-            <li>Cocktail Shaker</li>
-            <li>Insertion</li>
-            <li>Binary Insertion</li>
-            <li>Gnome</li>
-            <li>Optimized Gnome</li>
-            <li>Odd/Even</li>
-            <li>Comb</li>
-            <li>Shell</li>
-            <li>Selection</li>
-            <li>Double Selection</li>
-            <li>Heap</li>
-            <li>Merge</li>
-            <li>Quick</li>
-            <li>Intro</li>
+          <ul data-dropdown-list>
+            <li>bubble</li>
+            <li>cocktail shaker</li>
+            <li>insertion</li>
+            <li>binary insertion</li>
+            <li>gnome</li>
+            <li>optimized gnome</li>
+            <li>odd / even</li>
+            <li>comb</li>
+            <li>shell</li>
+            <li>selection</li>
+            <li>double selection</li>
+            <li>heap</li>
+            <li>in place merge</li>
+            <li>quick</li>
+            <li>intro</li>
           </ul>
         </div>
       </div>
@@ -76,6 +86,33 @@
         getComputedStyle(document.body).getPropertyValue("--dark") === "true"
           ? "dark"
           : "light";
+
+      function openModal() {
+        document.querySelector(".modal").classList.add("active");
+
+        const outsideClose = e => {
+          const modal = document.querySelector(".modal");
+
+          console.log(modal.contains(e.target));
+          console.log(e.target);
+
+          if (e.target != modal && modal.contains(e.target)) return;
+
+          closeDropdown();
+          modal.classList.remove("active");
+          document.removeEventListener("click", outsideClose);
+        };
+
+        setTimeout(() => document.addEventListener("click", outsideClose), 1);
+      }
+
+      function toggleDropdown() {
+        document.querySelector(".dropdown").classList.toggle("active");
+      }
+
+      function closeDropdown() {
+        document.querySelector(".dropdown").classList.remove("active");
+      }
     </script>
   </body>
 </html>

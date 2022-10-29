@@ -47,3 +47,5 @@ function windowResized() {
   resizeCanvas(...getCanvasDimensions());
   setArray();
 }
+
+//TODO: on window resize restart sorting

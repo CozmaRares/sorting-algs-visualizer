@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap");
+
 *,
 *::before,
 *::after {
@@ -52,6 +54,14 @@ body {
   font-size: 1.2em;
 }
 
+body.inactive *:not(footer, footer *) {
+  pointer-events: none;
+}
+
+body.inactive button {
+  color: var(--bg);
+}
+
 @media (prefers-color-scheme: dark) {
   body {
     --dark: true;
@@ -61,8 +71,9 @@ body {
 aside {
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: center;
   flex-direction: row;
+  gap: 2rem;
 }
 
 @media only screen and (min-width: 900px) {
@@ -75,8 +86,15 @@ aside {
   aside {
     justify-content: center;
     flex-direction: column;
-    gap: 3rem;
   }
+}
+
+aside [data-selected] {
+}
+
+[data-selected]::after,
+.dropdown li::after {
+  content: " Sort";
 }
 
 button {
@@ -86,6 +104,8 @@ button {
   font-weight: 500;
   transition-property: color, background-color;
   cursor: pointer;
+  width: 5em;
+  min-width: fit-content;
 }
 
 button:hover,
@@ -112,6 +132,7 @@ footer {
   transform: translateX(-50%);
   padding: 0.5rem 1rem;
   border-radius: 50rem;
+  font-weight: 500;
 }
 
 footer a {
@@ -135,21 +156,19 @@ footer a:hover i {
   right: 0;
   bottom: 0;
   opacity: 0;
-  visibility: hidden;
   opacity: 0;
   pointer-events: none;
   transition-property: opacity;
 }
 
 .modal.active {
-  visibility: visible;
   pointer-events: initial;
   opacity: 1;
 }
 
 .modal-container {
   background-color: var(--bg);
-  width: 40vw;
+  width: 500px;
   min-width: fit-content;
   padding: 2rem 1rem;
   position: absolute;
@@ -165,15 +184,17 @@ footer a:hover i {
   color: inherit;
   cursor: pointer;
   position: relative;
-  width: 50%;
-  min-width: fit-content;
+  width: 60%;
+  min-width: 300px;
+  margin-inline: auto;
+  text-transform: capitalize;
 }
 
 .dropdown > * {
   --spacing: 1.5rem;
 }
 
-#text {
+.dropdown > div {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -182,12 +203,7 @@ footer a:hover i {
   border-bottom: 1px solid var(--col);
 }
 
-#text span::after,
-.dropdown li::after {
-  content: " Sort";
-}
-
-#text i {
+.dropdown > div i {
   transition-property: transform;
 }
 
@@ -204,17 +220,15 @@ footer a:hover i {
   color: white;
   margin-top: 1rem;
   background-color: var(--bg);
-  box-shadow: 2px 2px 10px 2px var(--col);
-  transition-property: max-height;
-  visibility: hidden;
   pointer-events: none;
   cursor: pointer;
+  transition-property: max-height;
 }
 
 .dropdown.active ul {
   max-height: 30vh;
-  visibility: visible;
   pointer-events: initial;
+  box-shadow: 2px 2px 10px 2px var(--col);
 }
 
 .dropdown li {
