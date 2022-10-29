@@ -54,18 +54,18 @@ body {
   font-size: 1.2em;
 }
 
-body.inactive *:not(footer, footer *) {
+@media (prefers-color-scheme: dark) {
+  body {
+    --dark: true;
+  }
+}
+
+body.inactive {
   pointer-events: none;
 }
 
 body.inactive button {
   color: var(--bg);
-}
-
-@media (prefers-color-scheme: dark) {
-  body {
-    --dark: true;
-  }
 }
 
 aside {
@@ -81,7 +81,8 @@ aside {
   content: " Sort";
 }
 
-button {
+button,
+a {
   border: 1px solid var(--col);
   padding: 0.75rem;
   border-radius: 10px;
@@ -90,6 +91,19 @@ button {
   cursor: pointer;
   width: 7vw;
   min-width: fit-content;
+}
+
+.github {
+  pointer-events: initial !important;
+  text-align: center;
+}
+
+.github i {
+  transition-property: transform;
+}
+
+.github:hover i {
+  transform: rotate(360deg);
 }
 
 @media only screen and (min-width: 900px) {
