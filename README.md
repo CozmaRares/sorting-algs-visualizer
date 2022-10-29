@@ -19,6 +19,7 @@ ___Work in progress___
 
 * [x] Proper implementation for intro sort
 * [x] Change UI
+* [ ] Add dark mode toggle
 * [ ] Add more algorithms
 
 ### License

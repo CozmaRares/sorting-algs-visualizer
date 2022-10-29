@@ -49,7 +49,7 @@ body {
   color: var(--col);
   display: flex;
   gap: 4rem;
-  margin-top: 3rem;
+  margin-top: 1rem;
   flex-direction: column-reverse;
   font-size: 1.2em;
 }
@@ -76,22 +76,6 @@ aside {
   gap: 2rem;
 }
 
-@media only screen and (min-width: 900px) {
-  body {
-    flex-direction: row;
-    justify-content: center;
-    height: 100%;
-  }
-
-  aside {
-    justify-content: center;
-    flex-direction: column;
-  }
-}
-
-aside [data-selected] {
-}
-
 [data-selected]::after,
 .dropdown li::after {
   content: " Sort";
@@ -104,14 +88,26 @@ button {
   font-weight: 500;
   transition-property: color, background-color;
   cursor: pointer;
-  width: 5em;
+  width: 7vw;
   min-width: fit-content;
 }
 
-button:hover,
-button:active {
-  color: var(--bg);
-  background-color: var(--col);
+@media only screen and (min-width: 900px) {
+  body {
+    flex-direction: row;
+    justify-content: center;
+    height: 100%;
+  }
+
+  aside {
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  button:hover {
+    color: var(--bg);
+    background-color: var(--col);
+  }
 }
 
 #container {
@@ -121,31 +117,6 @@ button:active {
   box-shadow: 0 0 10px 5px var(--col);
   margin: 0 auto;
   display: flex;
-}
-
-footer {
-  background-color: var(--col);
-  text-align: center;
-  position: absolute;
-  bottom: 1%;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 0.5rem 1rem;
-  border-radius: 50rem;
-  font-weight: 500;
-}
-
-footer a {
-  text-decoration: none;
-  color: var(--bg);
-}
-
-footer a i {
-  transition: transform 200ms ease-in-out;
-}
-
-footer a:hover i {
-  transform: rotate(360deg);
 }
 
 .modal {

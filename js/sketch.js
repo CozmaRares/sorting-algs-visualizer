@@ -44,7 +44,11 @@ function draw() {
 }
 
 function windowResized() {
-  resizeCanvas(...getCanvasDimensions());
+  const [resizedWidth, resizedHeight] = getCanvasDimensions();
+
+  if (resizedWidth === width) return;
+
+  resizeCanvas(resizedWidth, resizedHeight);
   setArray();
 }
 

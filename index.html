@@ -29,8 +29,17 @@
   </head>
   <body>
     <aside>
-      <button onclick="startSorting()">Start</button>
       <button onclick="openModal()">Config</button>
+      <button onclick="startSorting()">Start</button>
+      <button>
+        <a
+          href="https://github.com/CozmaRares/sorting-algs-visualizer"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Github <i class="fa-brands fa-github"></i>
+        </a>
+      </button>
     </aside>
     <main>
       <div
@@ -45,15 +54,6 @@
       </div>
       <div id="container"></div>
     </main>
-    <footer>
-      <a
-        href="https://github.com/CozmaRares/sorting-algs-visualizer"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Github <i class="fa-brands fa-github"></i>
-      </a>
-    </footer>
     <div class="modal">
       <div class="modal-container">
         <div class="dropdown">
@@ -92,9 +92,6 @@
 
         const outsideClose = e => {
           const modal = document.querySelector(".modal");
-
-          console.log(modal.contains(e.target));
-          console.log(e.target);
 
           if (e.target != modal && modal.contains(e.target)) return;
 

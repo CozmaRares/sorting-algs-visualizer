@@ -538,16 +538,3 @@ async function intro() {
 
   await sort(0, arr.length - 1, 2 * Math.floor(Math.log(arr.length)));
 }
-
-function isHeap(begin, end) {
-  for (let i = begin; i <= end; i++) {
-    let l = 2 * i + 1,
-      r = 2 * i + 2;
-
-    if (l < arr.length && arr[i].value < arr[l].value) return [false, i];
-
-    if (r < arr.length && arr[i].value < arr[r].value) return [false, i];
-  }
-
-  return true;
-}
