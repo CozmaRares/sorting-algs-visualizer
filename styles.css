@@ -4,6 +4,9 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  transition-property: none;
+  transition-duration: 150ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 a {
@@ -46,6 +49,7 @@ body {
   gap: 4rem;
   margin-top: 3rem;
   flex-direction: column-reverse;
+  font-size: 1.2em;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -61,14 +65,26 @@ aside {
   flex-direction: row;
 }
 
+@media only screen and (min-width: 900px) {
+  body {
+    flex-direction: row;
+    justify-content: center;
+    height: 100%;
+  }
+
+  aside {
+    justify-content: center;
+    flex-direction: column;
+    gap: 3rem;
+  }
+}
+
 button {
   border: 1px solid var(--col);
   padding: 0.75rem;
   border-radius: 10px;
   font-weight: 500;
   transition-property: color, background-color;
-  transition-duration: 150ms;
-  transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
   cursor: pointer;
 }
 
@@ -111,16 +127,89 @@ footer a:hover i {
   transform: rotate(360deg);
 }
 
-@media only screen and (min-width: 900px) {
-  body {
-    flex-direction: row;
-    justify-content: center;
-    height: 100%;
-  }
+.modal {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
 
-  aside {
-    justify-content: center;
-    flex-direction: column;
-    gap: 3rem;
-  }
+.modal-container {
+  background-color: var(--bg);
+  width: 40vw;
+  min-width: fit-content;
+  padding: 2rem 1rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 5px;
+}
+
+.dropdown {
+  display: block;
+  background-color: inherit;
+  color: inherit;
+  cursor: pointer;
+  position: relative;
+  width: 50%;
+  min-width: fit-content;
+}
+
+.dropdown > * {
+  --spacing: 1.5rem;
+}
+
+#text {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-inline: var(--spacing);
+}
+
+#text span::after,
+.dropdown li::after {
+  content: " Sort";
+}
+
+#text i {
+  transition-property: transform;
+}
+
+.dropdown.active i {
+  transform: rotate(180deg);
+}
+
+.dropdown ul {
+  width: 100%;
+  max-height: 0;
+  overflow: auto;
+  position: absolute;
+  list-style: none;
+  color: white;
+  margin-top: 1rem;
+  background-color: var(--bg);
+  box-shadow: 2px 2px 10px 2px var(--col);
+  transition-property: max-height;
+  visibility: hidden;
+}
+
+.dropdown.active ul {
+  max-height: 30vh;
+  cursor: pointer;
+  visibility: visible;
+}
+
+.dropdown li {
+  margin: 0.5rem 0.25rem;
+  padding: 0.5rem calc(var(--spacing) - 0.25rem);
+  border-radius: 5px;
+  transition-property: color, background-color;
+}
+
+.dropdown li:hover {
+  background-color: var(--col);
+  color: var(--bg);
 }
