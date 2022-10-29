@@ -134,6 +134,17 @@ footer a:hover i {
   left: 0;
   right: 0;
   bottom: 0;
+  opacity: 0;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition-property: opacity;
+}
+
+.modal.active {
+  visibility: visible;
+  pointer-events: initial;
+  opacity: 1;
 }
 
 .modal-container {
@@ -167,6 +178,8 @@ footer a:hover i {
   align-items: center;
   justify-content: space-between;
   margin-inline: var(--spacing);
+  padding: 0.25rem 1rem;
+  border-bottom: 1px solid var(--col);
 }
 
 #text span::after,
@@ -194,12 +207,14 @@ footer a:hover i {
   box-shadow: 2px 2px 10px 2px var(--col);
   transition-property: max-height;
   visibility: hidden;
+  pointer-events: none;
+  cursor: pointer;
 }
 
 .dropdown.active ul {
   max-height: 30vh;
-  cursor: pointer;
   visibility: visible;
+  pointer-events: initial;
 }
 
 .dropdown li {
