@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sorting Algorithms Visualizer</title>
+  </head>
+  <body>
+    <div class="modal">
+      <div>
+        <label for="wait">Wait between frames:</label>
+        <input type="number" name="wait" id="wait" />
+      </div>
+      <div>
+        <label for="iterations">Iterations per frame:</label>
+        <input type="number" name="iterations" id="iterations" />
+      </div>
+      <button id="close">Close Modal</button>
+    </div>
+    <div id="container"></div>
+    <div class="controls">
+      <div class="select-container">
+        <select>
+          <option value="default">Select An Algorithm</option>
+        </select>
+      </div>
+      <button id="start-btn">Start Sorting</button>
+      <button id="settings">Settings</button>
+    </div>
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
